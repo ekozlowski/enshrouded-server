@@ -127,11 +127,14 @@ while [ $timeout -lt 11 ]; do
 done
 
 # Hold us open until we recieve a SIGTERM
+tail --pid=$enshrouded_pid -f /dev/null &
 wait
 
 # Handle post SIGTERM from here
 # Hold us open until WSServer-Linux pid closes, indicating full shutdown, then go home
-tail --pid=$enshrouded_pid -f /dev/null
+if ps -e | grep "enshrouded_serv"; then
+    tail --pid=$enshrouded_pid -f /dev/null
+fi
 
 # o7
 echo "$(timestamp) INFO: Shutdown complete."
